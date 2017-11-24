@@ -1,35 +1,14 @@
-package xyz.javista.core.domain;
+package xyz.javista.web.dto;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-@Entity
-public class OrderLineNumber {
+public class OrderLineNumberDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-
-    @NotNull
     private Double price;
-
-    @NotNull
-    @Column(name = "paid")
     private Boolean isPaid;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User purchaser;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
-
-    @NotNull
-    @Column(name = "dishname")
+    private UserDTO purchaser;
+    private UUID orderId;
     private String dishName;
 
     public UUID getId() {
@@ -56,20 +35,12 @@ public class OrderLineNumber {
         isPaid = paid;
     }
 
-    public User getPurchaser() {
+    public UserDTO getPurchaser() {
         return purchaser;
     }
 
-    public void setPurchaser(User purchaser) {
+    public void setPurchaser(UserDTO purchaser) {
         this.purchaser = purchaser;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 
     public String getDishName() {
@@ -78,5 +49,13 @@ public class OrderLineNumber {
 
     public void setDishName(String dishName) {
         this.dishName = dishName;
+    }
+
+    public UUID getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(UUID orderId) {
+        this.orderId = orderId;
     }
 }

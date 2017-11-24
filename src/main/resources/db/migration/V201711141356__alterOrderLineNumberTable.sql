@@ -1,0 +1,1 @@
+ALTER TABLE order_line_number ADD COLUMN IF NOT EXISTS dishName VARCHAR NOT NULL;

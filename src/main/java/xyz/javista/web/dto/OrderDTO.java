@@ -1,34 +1,17 @@
-package xyz.javista.core.domain;
+package xyz.javista.web.dto;
 
-import org.hibernate.validator.constraints.Length;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Table(name = "\"order\"")
-public class Order extends AuditBase{
+public class OrderDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-
-    @NotNull
-    @Length(min = 1, max = 255, message = "The restaurant name must be between 1 and 255 characters")
     private String restaurantName;
-
-    @Length(min = 1, max = 255, message = "The description must be between 1 and 255 characters")
     private String description;
-
-    @NotNull
-    @Column(name = "end_datetime")
     private LocalDateTime endDatetime;
-
-    @OneToMany(mappedBy = "order")
-    private List<OrderLineNumber> orderLineNumberList;
+    private UserDTO author;
+    private List<OrderLineNumberDTO> orderLineNumberList;
 
     public UUID getId() {
         return id;
@@ -62,11 +45,19 @@ public class Order extends AuditBase{
         this.endDatetime = endDatetime;
     }
 
-    public List<OrderLineNumber> getOrderLineNumberList() {
+    public UserDTO getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(UserDTO author) {
+        this.author = author;
+    }
+
+    public List<OrderLineNumberDTO> getOrderLineNumberList() {
         return orderLineNumberList;
     }
 
-    public void setOrderLineNumberList(List<OrderLineNumber> orderLineNumberList) {
+    public void setOrderLineNumberList(List<OrderLineNumberDTO> orderLineNumberList) {
         this.orderLineNumberList = orderLineNumberList;
     }
 }

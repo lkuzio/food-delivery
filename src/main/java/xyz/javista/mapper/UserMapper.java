@@ -1,9 +1,9 @@
 package xyz.javista.mapper;
 
 import org.mapstruct.Mapper;
-import xyz.javista.command.RegisterUserCommand;
+import xyz.javista.web.command.RegisterUserCommand;
 import xyz.javista.core.domain.User;
-import xyz.javista.dto.UserDTO;
+import xyz.javista.web.dto.UserDTO;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
