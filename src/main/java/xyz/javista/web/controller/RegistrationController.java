@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.javista.web.command.RegisterUserCommand;
 import xyz.javista.web.dto.UserDTO;
 import xyz.javista.exception.UserRegistrationException;
-import xyz.javista.web.command.RegisterUserCommandHandler;
+import xyz.javista.handler.RegisterUserCommandHandler;
 
 import javax.validation.Valid;
 

@@ -1,8 +1,8 @@
 package xyz.javista.exception;
 
-public class OrderLineItemException extends Exception{
-    public enum FailReason{
-        ORDER_NOT_EXIST, CANNOT_CREATE_ITEM, ORDER_EXPIRED, ORDER_ITEM_NOT_EXIST,
+public class OrderException extends Exception {
+    public enum FailReason {
+        ORDER_NOT_EXIST, ORDER_EXPIRED,
 
     }
 
@@ -16,7 +16,7 @@ public class OrderLineItemException extends Exception{
         this.failReason = failReason;
     }
 
-    public OrderLineItemException(FailReason failReason) {
+    public OrderException(FailReason failReason) {
         this.failReason = failReason;
     }
 }

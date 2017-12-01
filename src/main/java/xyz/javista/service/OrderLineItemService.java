@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import xyz.javista.core.domain.Order;
 import xyz.javista.core.domain.OrderLineNumber;
 import xyz.javista.core.domain.User;
@@ -14,12 +15,16 @@ import xyz.javista.exception.OrderLineItemException;
 import xyz.javista.mapper.OrderLineNumberMapper;
 import xyz.javista.mapper.OrderMapper;
 import xyz.javista.web.command.CreateOrderLineItemCommand;
+import xyz.javista.web.command.UpdateOrderLineItemCommand;
 import xyz.javista.web.dto.OrderDTO;
+import xyz.javista.web.dto.OrderLineNumberDTO;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Component
+@Service
+@Transactional
 public class OrderLineItemService {
 
     @Autowired
@@ -66,4 +71,30 @@ public class OrderLineItemService {
     }
 
 
+    public void removeOrderItem(String orderId, String orderItemId) throws OrderLineItemException {
+        OrderLineNumber orderItem = orderLineNumberRepository.findOne(UUID.fromString(orderItemId));
+        if (orderItem.getOrder().getId().equals(UUID.fromString(orderId))) {
+            orderLineNumberRepository.delete(orderItem);
+        } else {
+            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_NOT_EXIST);
+        }
+    }
+
+    public OrderLineNumberDTO updateOrderItem(UpdateOrderLineItemCommand updateOrderLineItemCommand) throws OrderLineItemException {
+        OrderLineNumber orderLineNumber = orderLineNumberRepository.findOne(updateOrderLineItemCommand.getOrderLineItemId());
+        if (orderLineNumber == null) {
+            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_ITEM_NOT_EXIST);
+        }
+        if(updateOrderLineItemCommand.getDishName().isPresent()) {
+            orderLineNumber.setDishName(updateOrderLineItemCommand.getDishName().get());
+        }
+        if(updateOrderLineItemCommand.getPrice().isPresent()) {
+            orderLineNumber.setPrice(updateOrderLineItemCommand.getPrice().get());
+        }
+        if(updateOrderLineItemCommand.getPaid().isPresent()){
+            orderLineNumber.setPaid(updateOrderLineItemCommand.getPaid().get());
+        }
+        return orderLineNumberMapper.toDTO(orderLineNumberRepository.saveAndFlush(orderLineNumber));
+
+    }
 }

@@ -1,9 +1,10 @@
-package xyz.javista.web.command;
+package xyz.javista.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import xyz.javista.core.domain.User;
+import xyz.javista.web.command.RegisterUserCommand;
 import xyz.javista.web.dto.UserDTO;
 import xyz.javista.exception.UserRegistrationException;
 import xyz.javista.mapper.UserMapper;

@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import xyz.javista.web.command.CreateOrderCommand;
 import xyz.javista.core.domain.Order;
+import xyz.javista.web.command.UpdateOrderCommand;
 import xyz.javista.web.dto.OrderDTO;
 
 @Mapper(componentModel = "spring", uses = DateTimeConverter.class)
