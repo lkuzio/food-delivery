@@ -39,7 +39,7 @@ public class CustomControllerAdvice {
     @ResponseBody
     @ResponseStatus(BAD_REQUEST)
     ErrorDTO handleRegistrationException(UserRegistrationException ex){
-        return new ErrorDTO(HttpStatus.BAD_REQUEST.value(), "User exist");
+        return new ErrorDTO(HttpStatus.BAD_REQUEST.value(), "USER_EXIST");
     }
 
 

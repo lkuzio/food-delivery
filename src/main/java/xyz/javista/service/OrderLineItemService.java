@@ -3,7 +3,6 @@ package xyz.javista.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import xyz.javista.core.domain.Order;
 import xyz.javista.core.domain.OrderLineNumber;
@@ -85,13 +84,13 @@ public class OrderLineItemService {
         if (orderLineNumber == null) {
             throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_ITEM_NOT_EXIST);
         }
-        if(updateOrderLineItemCommand.getDishName().isPresent()) {
+        if (updateOrderLineItemCommand.getDishName().isPresent()) {
             orderLineNumber.setDishName(updateOrderLineItemCommand.getDishName().get());
         }
-        if(updateOrderLineItemCommand.getPrice().isPresent()) {
+        if (updateOrderLineItemCommand.getPrice().isPresent()) {
             orderLineNumber.setPrice(updateOrderLineItemCommand.getPrice().get());
         }
-        if(updateOrderLineItemCommand.getPaid().isPresent()){
+        if (updateOrderLineItemCommand.getPaid().isPresent()) {
             orderLineNumber.setPaid(updateOrderLineItemCommand.getPaid().get());
         }
         return orderLineNumberMapper.toDTO(orderLineNumberRepository.saveAndFlush(orderLineNumber));

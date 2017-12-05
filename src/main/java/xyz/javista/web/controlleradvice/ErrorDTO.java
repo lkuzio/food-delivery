@@ -1,8 +1,12 @@
 package xyz.javista.web.controlleradvice;
 
 public class ErrorDTO {
-    private final int status;
-    private final String message;
+    private int status;
+    private String message;
+
+    public ErrorDTO() {
+
+    }
 
     public ErrorDTO(int status, String message) {
         this.status = status;

@@ -3,12 +3,16 @@ package xyz.javista.web.controlleradvice;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidationErrorDTO extends ErrorDTO{
+public class ValidationErrorDTO extends ErrorDTO {
 
     private List<CustomFieldError> fieldErrors = new ArrayList<>();
 
+    ValidationErrorDTO() {
+
+    }
+
     ValidationErrorDTO(int status, String message) {
-        super(status,message);
+        super(status, message);
     }
 
     public void addFieldError(String objectName, String path, String message) {
@@ -18,5 +22,9 @@ public class ValidationErrorDTO extends ErrorDTO{
 
     public List<CustomFieldError> getFieldErrors() {
         return fieldErrors;
+    }
+
+    public void setFieldErrors(List<CustomFieldError> fieldErrors) {
+        this.fieldErrors = fieldErrors;
     }
 }
