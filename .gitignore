@@ -1,3 +1,8 @@
-*.iml
-*.idea
-target/*
+# IntelliJ
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+.idea/**/libraries
+
+# Maven
+target/
