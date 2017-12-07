@@ -29,12 +29,12 @@ class RegistrationControllerTest extends Specification {
         response.body.id != null
     }
 
-    def "Registration should fail duo to existed user"() {
+    def "Registration should fail due to existing user"() {
         when:
         def response = this.restTemplate.postForEntity("/registration", registrationCommand("test", "Test", "11111111111111111111111111111111111111111", "test@test.test"), ErrorDTO)
         then:
         response.statusCode == HttpStatus.BAD_REQUEST
-        response.body.message == "USER_EXIST"
+        response.body.message == "USER_ALREADY_EXIST"
     }
 
     @Unroll

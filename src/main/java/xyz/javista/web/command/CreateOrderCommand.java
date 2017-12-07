@@ -2,6 +2,7 @@ package xyz.javista.web.command;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+import xyz.javista.validator.ValidDateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 
@@ -16,6 +17,7 @@ public class CreateOrderCommand {
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
+    @ValidDateTimeFormat
     private String endDatetime;
 
     public String getRestaurantName() {

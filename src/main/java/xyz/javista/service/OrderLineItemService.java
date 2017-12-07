@@ -10,6 +10,7 @@ import xyz.javista.core.domain.User;
 import xyz.javista.core.repository.OrderLineNumberRepository;
 import xyz.javista.core.repository.OrderRepository;
 import xyz.javista.core.repository.UserRepository;
+import xyz.javista.exception.DateTimeConverterException;
 import xyz.javista.exception.OrderLineItemException;
 import xyz.javista.mapper.OrderLineNumberMapper;
 import xyz.javista.mapper.OrderMapper;
@@ -41,7 +42,7 @@ public class OrderLineItemService {
     @Autowired
     private OrderMapper orderMapper;
 
-    public OrderDTO createOrderLineItem(CreateOrderLineItemCommand createOrderLineItemCommand, String orderId) throws OrderLineItemException {
+    public OrderDTO createOrderLineItem(CreateOrderLineItemCommand createOrderLineItemCommand, String orderId) throws OrderLineItemException, DateTimeConverterException {
         UUID parentOrderId;
         try {
             parentOrderId = UUID.fromString(orderId);
@@ -79,7 +80,7 @@ public class OrderLineItemService {
         }
     }
 
-    public OrderLineNumberDTO updateOrderItem(UpdateOrderLineItemCommand updateOrderLineItemCommand) throws OrderLineItemException {
+    public OrderLineNumberDTO updateOrderItem(UpdateOrderLineItemCommand updateOrderLineItemCommand) throws OrderLineItemException, DateTimeConverterException {
         OrderLineNumber orderLineNumber = orderLineNumberRepository.findOne(updateOrderLineItemCommand.getOrderLineItemId());
         if (orderLineNumber == null) {
             throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_ITEM_NOT_EXIST);

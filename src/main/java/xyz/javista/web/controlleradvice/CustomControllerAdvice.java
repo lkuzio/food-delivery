@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import xyz.javista.exception.DateTimeConverterException;
 import xyz.javista.exception.UserRegistrationException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,14 @@ public class CustomControllerAdvice {
     @ResponseBody
     @ResponseStatus(BAD_REQUEST)
     ErrorDTO handleRegistrationException(UserRegistrationException ex){
-        return new ErrorDTO(HttpStatus.BAD_REQUEST.value(), "USER_EXIST");
+        return new ErrorDTO(HttpStatus.BAD_REQUEST.value(), ex.getFailReason().toString());
+    }
+
+    @ExceptionHandler(DateTimeConverterException.class)
+    @ResponseBody
+    @ResponseStatus(BAD_REQUEST)
+    ErrorDTO handleDateTimeConverterException(DateTimeConverterException ex){
+        return new ErrorDTO(HttpStatus.BAD_REQUEST.value(), ex.getFailReason().toString());
     }
 
 

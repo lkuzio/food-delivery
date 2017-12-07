@@ -1,13 +1,13 @@
 package xyz.javista.exception;
 
-public class UserRegistrationException extends Exception {
+public class DateTimeConverterException extends Exception {
     public enum FailReason {
-        USER_ALREADY_EXIST
+        INVALID_DATE_TIME_FORMAT
     }
 
     final FailReason failReason;
 
-    public UserRegistrationException(FailReason failReason) {
+    public DateTimeConverterException(FailReason failReason) {
         this.failReason = failReason;
     }
 
