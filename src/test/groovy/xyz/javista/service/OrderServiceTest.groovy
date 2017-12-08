@@ -12,6 +12,7 @@ import xyz.javista.web.command.CreateOrderCommand
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+
 class OrderServiceTest extends Specification {
 
 
@@ -30,7 +31,6 @@ class OrderServiceTest extends Specification {
         given:
         auditor.getCurrentAuditor() >> userRepository.findAll().get(0)
     }
-
 
     def "CreateOrder"() {
         when:

@@ -2,19 +2,18 @@ package xyz.javista.core.domain;
 
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "\"order\"")
-public class Order extends AuditBase{
+public class Order extends AuditBase {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
 
     @NotNull
     @Length(min = 1, max = 255, message = "The restaurant name must be between 1 and 255 characters")
@@ -29,14 +28,6 @@ public class Order extends AuditBase{
 
     @OneToMany(mappedBy = "order")
     private List<OrderLineNumber> orderLineNumberList;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public String getRestaurantName() {
         return restaurantName;

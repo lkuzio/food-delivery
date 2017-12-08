@@ -1,15 +1,13 @@
 package xyz.javista.core.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
 
 @Entity
-public class OrderLineNumber {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+public class OrderLineNumber extends AuditBase {
 
     @NotNull
     private Double price;
@@ -31,14 +29,6 @@ public class OrderLineNumber {
     @NotNull
     @Column(name = "dishname")
     private String dishName;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public Double getPrice() {
         return price;
