@@ -9,6 +9,17 @@ public class UserDTO {
     private String email;
     private String login;
 
+    public UserDTO(){
+
+    }
+
+    public UserDTO(UUID id, String name, String email, String login) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.login = login;
+    }
+
     public UUID getId() {
         return id;
     }

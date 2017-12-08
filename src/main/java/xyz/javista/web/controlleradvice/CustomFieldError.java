@@ -6,6 +6,10 @@ public class CustomFieldError {
     private String field;
     private String message;
 
+    public CustomFieldError(){
+
+    }
+
     public CustomFieldError(String objectName, String field, String message) {
         this.objectName = objectName;
         this.field = field;

@@ -66,10 +66,8 @@ public class OrderService {
     }
 
     private void canUpdateOrDelete(Order order) throws OrderException {
-        if (!order.getCreatedBy().equals(auditorAware.getCurrentAuditor())) {
-            if (order.getEndDatetime().isBefore(LocalDateTime.now())) {
-                throw new OrderException(OrderException.FailReason.ORDER_EXPIRED);
-            }
+        if (!order.getCreatedBy().equals(auditorAware.getCurrentAuditor()) && order.getEndDatetime().isBefore(LocalDateTime.now())) {
+            throw new OrderException(OrderException.FailReason.ORDER_EXPIRED);
         }
     }
 

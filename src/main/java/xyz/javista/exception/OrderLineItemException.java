@@ -6,14 +6,10 @@ public class OrderLineItemException extends Exception{
 
     }
 
-    FailReason failReason;
+    final FailReason failReason;
 
     public FailReason getFailReason() {
         return failReason;
-    }
-
-    public void setFailReason(FailReason failReason) {
-        this.failReason = failReason;
     }
 
     public OrderLineItemException(FailReason failReason) {

@@ -10,14 +10,9 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Entity(name = "users")
 public class User extends AuditBase implements UserDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
 
     @NotNull
     @Length(min = 1, max = 32, message = "The name must be between 1 and 50 characters")
@@ -43,21 +38,13 @@ public class User extends AuditBase implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "createdby")
+    @OneToMany(mappedBy = "createdBy")
     private List<Order> createdOrders;
 
     @OneToMany(mappedBy = "purchaser")
     private List<OrderLineNumber> purchasedProducts;
 
     public User() {
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getName() {

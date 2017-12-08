@@ -3,6 +3,7 @@ package xyz.javista.config
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 import xyz.javista.core.domain.Order
 import xyz.javista.core.domain.User
@@ -20,6 +21,9 @@ class DataLoader implements ApplicationRunner {
     @Autowired
     OrderRepository orderRepository
 
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @Override
     void run(ApplicationArguments applicationArguments) throws Exception {
@@ -30,10 +34,17 @@ class DataLoader implements ApplicationRunner {
 
     def insertOrders() {
         def order = new Order()
-        order.id = UUID.randomUUID()
-        order.restaurantName = "asd"
-        order.description = "description"
         def user = userRepository.findAll().get(0)
+        order.id = UUID.randomUUID()
+        order.restaurantName = "FastHot"
+        order.description = "The best in city"
+                order.createdBy = user
+        order.createdOn = LocalDateTime.now()
+        order.endDatetime = LocalDateTime.now().plusHours(10)
+        orderRepository.save(order)
+        order.id = UUID.randomUUID()
+        order.restaurantName = "FastHot2"
+        order.description = "Fresh juice for free"
         order.createdBy = user
         order.createdOn = LocalDateTime.now()
         order.endDatetime = LocalDateTime.now().plusHours(10)
@@ -45,7 +56,7 @@ class DataLoader implements ApplicationRunner {
         user.name = "Test"
         user.login = "test"
         user.email = "test@test.test"
-        user.password = "11111111111111111111111111111111111111111"
-        userRepository.saveAndFlush(user);
+        user.password = bCryptPasswordEncoder.encode("11111111111111111111111111111111111111111")
+        userRepository.saveAndFlush(user)
     }
 }

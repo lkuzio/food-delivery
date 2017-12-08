@@ -1,16 +1,15 @@
 package xyz.javista.core.domain;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
-public class Role {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+public class Role extends AuditBase implements Serializable {
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -18,14 +17,6 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public RoleType getName() {
         return name;

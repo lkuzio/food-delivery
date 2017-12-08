@@ -25,7 +25,7 @@ public class RegisterUserCommandHandler {
     public UserDTO registerUser(RegisterUserCommand userDTO) throws UserRegistrationException {
         User existed = userRepository.findByLogin(userDTO.getLogin());
         if(existed!=null){
-            throw new UserRegistrationException();
+            throw new UserRegistrationException(UserRegistrationException.FailReason.USER_ALREADY_EXIST);
         }
         User user = userMapper.toEntity(userDTO);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
