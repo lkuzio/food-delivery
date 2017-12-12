@@ -40,8 +40,8 @@ public class OrderService {
         return orderMapper.toDto(orderRepository.saveAndFlush(entity));
     }
 
-    public OrderDTO getOrder(String orderId) {
-        return orderMapper.toDto(orderRepository.findOne(UUID.fromString(orderId)));
+    public OrderDTO getOrder(String orderId) throws OrderException {
+        return orderMapper.toDto(getOrderIfExist(orderId));
     }
 
     public Page<OrderDTO> getOrders(GetOrderListQuery query) {

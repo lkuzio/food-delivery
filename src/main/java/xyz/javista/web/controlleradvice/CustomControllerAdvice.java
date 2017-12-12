@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import xyz.javista.exception.DateTimeConverterException;
+import xyz.javista.exception.OrderException;
 import xyz.javista.exception.UserException;
 import xyz.javista.exception.UserRegistrationException;
 
@@ -60,6 +61,15 @@ public class CustomControllerAdvice {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO(HttpStatus.NOT_FOUND.value(), uex.getMessage()));
         }
         return ResponseEntity.badRequest().body(new ErrorDTO(HttpStatus.BAD_REQUEST.value(), "General problem with User account."));
+    }
+
+    @ExceptionHandler(OrderException.class)
+    @ResponseBody
+    ResponseEntity<ErrorDTO> handleOrderException(OrderException oex) {
+        if (oex.getFailReason().equals(OrderException.FailReason.ORDER_NOT_EXIST)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO(HttpStatus.NOT_FOUND.value(), oex.getMessage()));
+        }
+        return ResponseEntity.badRequest().body(new ErrorDTO(HttpStatus.BAD_REQUEST.value(), "General problem with Orders."));
     }
 
 }
