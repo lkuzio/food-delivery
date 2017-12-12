@@ -38,7 +38,7 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{orderId}")
-    public OrderDTO getOrder(@PathVariable(name = "orderId") String orderId) {
+    public OrderDTO getOrder(@PathVariable(name = "orderId") String orderId) throws OrderException {
         return orderService.getOrder(orderId);
     }
 
