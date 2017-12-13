@@ -8,6 +8,7 @@ public class OrderDTO {
 
     private UUID id;
     private String restaurantName;
+    private String url;
     private String description;
     private LocalDateTime endDatetime;
     private UserDTO author;
@@ -27,6 +28,14 @@ public class OrderDTO {
 
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {
