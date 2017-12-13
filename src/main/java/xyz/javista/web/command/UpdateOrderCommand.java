@@ -11,6 +11,9 @@ public class UpdateOrderCommand {
     @Length(min = 1, max = 255, message = "The restaurant name must be between 1 and 255 characters")
     private String restaurantName;
 
+    @Length(max = 65536, message = "The restaurant menu url must be between 0 and 65 536")
+    private String url;
+
     @Length(min = 1, max = 255, message = "The description must be between 1 and 255 characters")
     private String description;
 
@@ -26,6 +29,14 @@ public class UpdateOrderCommand {
 
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {

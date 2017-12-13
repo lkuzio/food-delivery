@@ -62,6 +62,7 @@ public class OrderService {
         order.setDescription(updateOrderCommand.getDescription());
         order.setRestaurantName(updateOrderCommand.getRestaurantName());
         order.setEndDatetime(LocalDateTime.parse(updateOrderCommand.getEndDatetime()));
+        order.setUrl(updateOrderCommand.getUrl());
         return orderMapper.toDto(orderRepository.saveAndFlush(order));
     }
 
