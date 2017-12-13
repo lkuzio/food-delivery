@@ -54,10 +54,10 @@ public class OrderLineItemService {
             throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_NOT_EXIST);
         }
 
-        if (order.getEndDatetime().isBefore(LocalDateTime.now())) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!order.getCreatedBy().getLogin().equals(user.getLogin()) && order.getEndDatetime().isBefore(LocalDateTime.now())) {
             throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_EXPIRED);
         }
-
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UUID userId = ((User) authentication.getPrincipal()).getId();
