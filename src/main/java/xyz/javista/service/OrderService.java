@@ -25,7 +25,9 @@ import static xyz.javista.exception.OrderException.FailReason.ORDER_NOT_EXIST;
 @Transactional
 public class OrderService {
 
-
+    private static final String OPERATION_NOT_ALLOWED_MESSAGE = "Operation not allowed!";
+    private static final String ORDER_EXPIRED_MESSAGE = "Order expired!";
+    private static final String ORDER_NOT_EXISTS_MESSAGE = "Order not exists!";
     @Autowired
     OrderRepository orderRepository;
 
@@ -67,8 +69,11 @@ public class OrderService {
     }
 
     private void canUpdateOrDelete(Order order) throws OrderException {
-        if (!order.getCreatedBy().equals(auditorAware.getCurrentAuditor()) && order.getEndDatetime().isBefore(LocalDateTime.now())) {
-            throw new OrderException(OrderException.FailReason.ORDER_EXPIRED);
+        if (!order.getCreatedBy().getLogin().equals(auditorAware.getCurrentAuditor().getLogin())) {
+            throw new OrderException(OrderException.FailReason.NOT_ALLOWED, OPERATION_NOT_ALLOWED_MESSAGE);
+        }
+        if (order.getEndDatetime().isBefore(LocalDateTime.now())) {
+            throw new OrderException(OrderException.FailReason.ORDER_EXPIRED, ORDER_EXPIRED_MESSAGE);
         }
     }
 
@@ -76,7 +81,7 @@ public class OrderService {
     private Order getOrderIfExist(String orderId) throws OrderException {
         Order order = orderRepository.findOne(UUID.fromString(orderId));
         if (order == null) {
-            throw new OrderException(ORDER_NOT_EXIST);
+            throw new OrderException(ORDER_NOT_EXIST, ORDER_NOT_EXISTS_MESSAGE);
         }
         return order;
     }
