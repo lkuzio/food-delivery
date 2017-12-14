@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import xyz.javista.config.AuditorAwareImpl;
 import xyz.javista.core.domain.Order;
 import xyz.javista.core.domain.OrderLineNumber;
 import xyz.javista.core.domain.User;
@@ -27,6 +28,10 @@ import java.util.UUID;
 @Transactional
 public class OrderLineItemService {
 
+    private static final String ORDER_NOT_EXISTS_MESSAGE = "Order not exists!";
+    private static final String ORDER_EXPIRED_MESSAGE = "Order expired!";
+    private static final String ORDER_ITEM_NOT_EXISTS_MESSAGE = "Order item not exists!";
+    private static final String OPERATION_NOT_ALLOWED_MESSAGE = "Operation not allowed!";
     @Autowired
     OrderRepository orderRepository;
 
@@ -42,21 +47,23 @@ public class OrderLineItemService {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    AuditorAwareImpl auditorAware;
+
     public OrderDTO createOrderLineItem(CreateOrderLineItemCommand createOrderLineItemCommand, String orderId) throws OrderLineItemException, DateTimeConverterException {
         UUID parentOrderId;
         try {
             parentOrderId = UUID.fromString(orderId);
         } catch (IllegalArgumentException ex) {
-            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_NOT_EXIST);
+            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_NOT_EXIST, ORDER_NOT_EXISTS_MESSAGE);
         }
         Order order = orderRepository.findOne(parentOrderId);
         if (order == null) {
-            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_NOT_EXIST);
+            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_NOT_EXIST, ORDER_NOT_EXISTS_MESSAGE);
         }
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!order.getCreatedBy().getLogin().equals(user.getLogin()) && order.getEndDatetime().isBefore(LocalDateTime.now())) {
-            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_EXPIRED);
+        if (order.getEndDatetime().isBefore(LocalDateTime.now())) {
+            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_EXPIRED, ORDER_EXPIRED_MESSAGE);
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -73,18 +80,21 @@ public class OrderLineItemService {
 
     public void removeOrderItem(String orderId, String orderItemId) throws OrderLineItemException {
         OrderLineNumber orderItem = orderLineNumberRepository.findOne(UUID.fromString(orderItemId));
+        canUpdateOrDelete(orderItem);
         if (orderItem.getOrder().getId().equals(UUID.fromString(orderId))) {
             orderLineNumberRepository.delete(orderItem);
         } else {
-            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_NOT_EXIST);
+            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_NOT_EXIST, ORDER_NOT_EXISTS_MESSAGE);
         }
     }
 
     public OrderLineNumberDTO updateOrderItem(UpdateOrderLineItemCommand updateOrderLineItemCommand) throws OrderLineItemException, DateTimeConverterException {
         OrderLineNumber orderLineNumber = orderLineNumberRepository.findOne(updateOrderLineItemCommand.getOrderLineItemId());
         if (orderLineNumber == null) {
-            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_ITEM_NOT_EXIST);
+            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_ITEM_NOT_EXIST, ORDER_ITEM_NOT_EXISTS_MESSAGE);
         }
+        canUpdateOrDelete(orderLineNumber);
+
         if (updateOrderLineItemCommand.getDishName().isPresent()) {
             orderLineNumber.setDishName(updateOrderLineItemCommand.getDishName().get());
         }
@@ -96,5 +106,15 @@ public class OrderLineItemService {
         }
         return orderLineNumberMapper.toDTO(orderLineNumberRepository.saveAndFlush(orderLineNumber));
 
+    }
+
+    private void canUpdateOrDelete(OrderLineNumber orderLineNumber) throws OrderLineItemException {
+        User user = auditorAware.getCurrentAuditor();
+        if (!orderLineNumber.getOrder().getCreatedBy().getLogin().equals(user.getLogin()) && orderLineNumber.getOrder().getEndDatetime().isBefore(LocalDateTime.now())) {
+            throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_EXPIRED, ORDER_EXPIRED_MESSAGE);
+        }
+        if (!orderLineNumber.getPurchaser().getLogin().equals(user.getLogin())) {
+            throw new OrderLineItemException(OrderLineItemException.FailReason.NOT_ALLOWED, OPERATION_NOT_ALLOWED_MESSAGE);
+        }
     }
 }
