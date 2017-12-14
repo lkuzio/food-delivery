@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import xyz.javista.exception.DateTimeConverterException;
-import xyz.javista.exception.OrderException;
-import xyz.javista.exception.UserException;
-import xyz.javista.exception.UserRegistrationException;
+import xyz.javista.exception.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -57,19 +54,42 @@ public class CustomControllerAdvice {
     @ExceptionHandler(UserException.class)
     @ResponseBody
     ResponseEntity<ErrorDTO> handleUserException(UserException uex) {
-        if (uex.getFailReason().equals(UserException.FailReason.USER_NOT_FOUND)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO(HttpStatus.NOT_FOUND.value(), uex.getMessage()));
+        switch (uex.getFailReason()) {
+            case USER_NOT_FOUND: return notFound(uex);
+            default: return badRequest("General problem with User account.");
         }
-        return ResponseEntity.badRequest().body(new ErrorDTO(HttpStatus.BAD_REQUEST.value(), "General problem with User account."));
     }
 
     @ExceptionHandler(OrderException.class)
     @ResponseBody
     ResponseEntity<ErrorDTO> handleOrderException(OrderException oex) {
-        if (oex.getFailReason().equals(OrderException.FailReason.ORDER_NOT_EXIST)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO(HttpStatus.NOT_FOUND.value(), oex.getMessage()));
+        switch (oex.getFailReason()) {
+            case NOT_ALLOWED: return badRequest(oex);
+            case ORDER_NOT_EXIST: return notFound(oex);
+            default: return badRequest("General problem with Orders.");
         }
-        return ResponseEntity.badRequest().body(new ErrorDTO(HttpStatus.BAD_REQUEST.value(), "General problem with Orders."));
     }
 
+    @ExceptionHandler(OrderLineItemException.class)
+    @ResponseBody
+    ResponseEntity<ErrorDTO> handleOrderLineItemException(OrderLineItemException olex) {
+        switch(olex.getFailReason()) {
+            case NOT_ALLOWED:
+            case ORDER_EXPIRED: return badRequest(olex);
+            case ORDER_ITEM_NOT_EXIST: return notFound(olex);
+            default: return badRequest("General problem with Order line item.");
+        }
+    }
+
+    private ResponseEntity<ErrorDTO> notFound(Exception ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDTO(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
+    }
+
+    private ResponseEntity<ErrorDTO> badRequest(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDTO(HttpStatus.BAD_REQUEST.value(), ex.getMessage()));
+    }
+
+    private ResponseEntity<ErrorDTO> badRequest(String message) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDTO(HttpStatus.BAD_REQUEST.value(), message));
+    }
 }
