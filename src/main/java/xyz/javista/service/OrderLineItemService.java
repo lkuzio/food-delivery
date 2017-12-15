@@ -62,7 +62,8 @@ public class OrderLineItemService {
             throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_NOT_EXIST, ORDER_NOT_EXISTS_MESSAGE);
         }
 
-        if (order.getEndDatetime().isBefore(LocalDateTime.now())) {
+        User user = auditorAware.getCurrentAuditor();
+        if (!order.getCreatedBy().getLogin().equals(user.getLogin()) && order.getEndDatetime().isBefore(LocalDateTime.now())) {
             throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_EXPIRED, ORDER_EXPIRED_MESSAGE);
         }
 
