@@ -114,7 +114,7 @@ public class OrderLineItemService {
         if (!orderLineNumber.getOrder().getCreatedBy().getLogin().equals(user.getLogin()) && orderLineNumber.getOrder().getEndDatetime().isBefore(LocalDateTime.now())) {
             throw new OrderLineItemException(OrderLineItemException.FailReason.ORDER_EXPIRED, ORDER_EXPIRED_MESSAGE);
         }
-        if (!orderLineNumber.getPurchaser().getLogin().equals(user.getLogin())) {
+        if (!orderLineNumber.getOrder().getCreatedBy().getLogin().equals(user.getLogin()) && !orderLineNumber.getPurchaser().getLogin().equals(user.getLogin())) {
             throw new OrderLineItemException(OrderLineItemException.FailReason.NOT_ALLOWED, OPERATION_NOT_ALLOWED_MESSAGE);
         }
     }
